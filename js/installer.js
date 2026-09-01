@@ -22,20 +22,22 @@
     "android.permission.HIGH_SAMPLING_RATE_SENSORS",
   ];
 
+  // Grantable vehicle permissions only (DisplayMirror/PERMISSIONS.md "Granted
+  // Car Permissions"). The signature|privileged ones (CAR_TIRES, CAR_MILEAGE,
+  // CAR_ENGINE_DETAILED, CAR_DYNAMICS_STATE, CONTROL_CAR_CLIMATE,
+  // CAR_DRIVING_STATE, CAR_VENDOR_EXTENSION, …) can never be granted to a
+  // user-installed app and are deliberately not attempted.
   const CAR_PERMS = [
     "android.car.permission.CAR_SPEED",
     "android.car.permission.CAR_ENERGY",
-    "android.car.permission.CAR_ENGINE_DETAILED",
     "android.car.permission.CAR_POWERTRAIN",
-    "android.car.permission.CAR_TIRES",
     "android.car.permission.CAR_INFO",
+    "android.car.permission.CAR_ENERGY_PORTS",
     "android.car.permission.CAR_EXTERIOR_ENVIRONMENT",
-    "android.car.permission.CAR_MILEAGE",
-    "android.car.permission.CAR_VENDOR_EXTENSION",
-    "android.car.permission.CAR_DYNAMICS_STATE",
-    "android.car.permission.CONTROL_CAR_CLIMATE",
-    "android.permission.READ_CAR_DISPLAY_UNITS",
-    "android.car.permission.CAR_DRIVING_STATE",
+    "android.car.permission.READ_CAR_DISPLAY_UNITS",
+    "android.car.permission.CONTROL_CAR_DISPLAY_UNITS",
+    "android.car.permission.READ_CAR_POWER_POLICY",
+    "android.car.permission.USE_REMOTE_ACCESS",
   ];
 
   function log(msg, cls) { global.DMLog?.log(msg, cls); }

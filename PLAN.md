@@ -171,10 +171,10 @@ retry and "re-run setup" for the permissions block only.
 | 3 | Rebind instrument cluster | `am crash com.autolink.instrument` | tolerant (G700-only, after fresh install) |
 | 4 | AppOps | `appops set PKG SYSTEM_ALERT_WINDOW allow` · `PROJECT_MEDIA allow` · `REQUEST_INSTALL_PACKAGES allow` · `USE_FULL_SCREEN_INTENT allow` | first 3 required, last tolerant |
 | 5 | Runtime perms | `pm grant PKG android.permission.{READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, SYSTEM_ALERT_WINDOW, ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, HIGH_SAMPLING_RATE_SENSORS}` | each tolerant |
-| 6 | Car perms | `pm grant PKG android.car.permission.{CAR_SPEED, CAR_ENERGY, CAR_ENGINE_DETAILED, CAR_POWERTRAIN, CAR_TIRES, CAR_INFO, CAR_EXTERIOR_ENVIRONMENT, CAR_MILEAGE, CAR_VENDOR_EXTENSION, CAR_DYNAMICS_STATE, CONTROL_CAR_CLIMATE, READ_CAR_DISPLAY_UNITS, CAR_DRIVING_STATE}` | each tolerant |
+| 6 | Car perms | `pm grant PKG android.car.permission.{CAR_SPEED, CAR_ENERGY, CAR_POWERTRAIN, CAR_INFO, CAR_ENERGY_PORTS, CAR_EXTERIOR_ENVIRONMENT, READ_CAR_DISPLAY_UNITS, CONTROL_CAR_DISPLAY_UNITS, READ_CAR_POWER_POLICY, USE_REMOTE_ACCESS}` — only the runtime-grantable set from DisplayMirror/PERMISSIONS.md; the signature\|privileged ones (CAR_TIRES, CAR_MILEAGE, …) are never attempted | each tolerant |
 | 7 | Notification listener | `cmd notification allow_listener PKG/.MediaNotificationListener` | tolerant |
 | 8 | Extra appops | `appops set PKG WRITE_SETTINGS allow` · `ACCESS_RESTRICTED_SETTINGS allow` | tolerant |
-| 9 | Back-button service | `settings put secure enabled_accessibility_services PKG/.NavBarBackButtonService` + `settings put secure accessibility_enabled 1` | tolerant, behind an opt-in toggle (only for cars that want the nav-bar back button) |
+| 9 | Back-button service | `settings put secure enabled_accessibility_services PKG/.NavBarBackButtonService` + `settings put secure accessibility_enabled 1` | tolerant, checkbox default ON (parity with `make setup`) |
 | 10 | Autostart | `dumpsys deviceidle whitelist +PKG` · `pm enable PKG/.BootReceiver` | required |
 | 11 | ADB keys | see §5 | tolerant (warn: force-stop/split-screen need it) |
 | 12 | Launch | `am start -n PKG/.MainActivity` | required |
