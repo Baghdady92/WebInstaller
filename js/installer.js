@@ -183,6 +183,29 @@
       },
     },
     {
+      // Give the app the browser's ADB identity so force-stop / split-screen
+      // work locally with no PC. Same files install.sh pushes (README §Manual).
+      id: "keys", key: "install.step.keys", required: false,
+      async run() {
+        const enc = new TextEncoder();
+        const priv = enc.encode(await global.DMKeys.getPrivateKeyPem());
+        const pub = enc.encode(await global.DMKeys.getAndroidPublicKey());
+        const sync = await adb().sync();
+        try {
+          await sync.write({ filename: "/data/local/tmp/adbkey", file: new Blob([priv]).stream(), permission: 0o600 });
+          await sync.write({ filename: "/data/local/tmp/adbkey.pub", file: new Blob([pub]).stream(), permission: 0o644 });
+        } finally {
+          await sync.dispose();
+        }
+        await shell(["run-as", PKG, "mkdir", "-p", "./files"]);
+        await shell(["run-as", PKG, "cp", "/data/local/tmp/adbkey", "./files/adbkey"]);
+        await shell(["run-as", PKG, "cp", "/data/local/tmp/adbkey.pub", "./files/adbkey.pub"]);
+        const ls = await shell(["run-as", PKG, "ls", "files/adbkey"]);
+        if (!/adbkey/.test(ls)) throw new Error("run-as verification failed");
+        try { await shell(["rm", "-f", "/data/local/tmp/adbkey", "/data/local/tmp/adbkey.pub"]); } catch { /* tmp files */ }
+      },
+    },
+    {
       id: "launch", key: "install.step.launch", required: true,
       async run() {
         await shell(["am", "start", "-n", ACTIVITY]);

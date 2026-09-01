@@ -145,6 +145,12 @@
     return `${bytesToB64(out)} ${KEY_NAME}\n`;
   }
 
+  /** PKCS#8 PEM of the private key — the standard adbkey file format. */
+  async function getPrivateKeyPem() {
+    const rec = await getOrCreate();
+    return toPem(rec.pkcs8, "PRIVATE KEY");
+  }
+
   /** Credential store for AdbDaemonTransport.authenticate (same identity every connect). */
   function credentialStore() {
     return {
@@ -163,7 +169,7 @@
     // pure helpers (exported for tests)
     derInt, derSeq, jwkToPkcs1, pkcs1ToPkcs8, toPem, b64uToBytes, bytesToB64,
     // storage / auth
-    createKey, loadKey, getOrCreate, getAndroidPublicKey, credentialStore, KEY_NAME,
+    createKey, loadKey, getOrCreate, getAndroidPublicKey, getPrivateKeyPem, credentialStore, KEY_NAME,
   };
 
   if (typeof module !== "undefined" && module.exports) module.exports = api;

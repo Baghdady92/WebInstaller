@@ -46,6 +46,7 @@
       "install.step.notif": "Notification listener & settings access",
       "install.step.accessibility": "Nav-bar back button service",
       "install.step.autostart": "Auto-start on boot",
+      "install.step.keys": "ADB keys (force-stop & split-screen)",
       "install.step.launch": "Launch DisplayMirror",
     },
     ar: {
@@ -109,6 +110,7 @@
       "install.step.notif": "مستمع الإشعارات والوصول للإعدادات",
       "install.step.accessibility": "خدمة زر الرجوع",
       "install.step.autostart": "التشغيل التلقائي عند الإقلاع",
+      "install.step.keys": "مفاتيح ADB (إيقاف التطبيقات والشاشة المنقسمة)",
       "install.step.launch": "تشغيل DisplayMirror",
       "gate.nonchrome": "يعمل هذا الموقع في متصفح كروم فقط (على حاسوب أو هاتف). افتح الصفحة في كروم ثم أعد المحاولة.",
       "gate.insecure": "يجب فتح الصفحة عبر HTTPS (أو localhost) حتى يعمل WebUSB.",
