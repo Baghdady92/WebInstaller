@@ -14,6 +14,7 @@
   <script defer src="js/keys.js"></script>
   <script defer src="js/device.js"></script>
   <script defer src="js/installer.js"></script>
+  <script defer src="js/tools.js"></script>
   <script defer src="js/status.js"></script>
 </head>
 <body>
@@ -120,7 +121,16 @@
 
     <section class="card" id="tools">
       <h2 data-i18n="tools.title">Tools</h2>
-      <p class="soon" data-i18n="phase5">Update check, kill switches, uninstall, diagnostics — coming later.</p>
+      <div class="tool-grid">
+        <button type="button" id="checkUpdate" data-i18n="tools.update.btn" disabled>Check for update</button>
+        <button type="button" id="rerunSetup" data-i18n="tools.setup.btn" disabled>Re-run setup (permissions)</button>
+        <button type="button" id="killSwitchBtn" data-i18n="tools.kill.btn" disabled>Auto-start kill switch</button>
+        <button type="button" id="uninstallBtn" class="danger" data-i18n="tools.uninstall.btn" disabled>Uninstall</button>
+        <button type="button" id="diagBtn" data-i18n="tools.diag.btn" disabled>Diagnostics report</button>
+      </div>
+      <p class="tool-result" id="updateResult"></p>
+      <p class="tool-result" id="killSwitchState"></p>
+      <pre id="diagOut" hidden></pre>
     </section>
 
     <section class="card log-card">

@@ -239,12 +239,13 @@
     if (wrap) wrap.hidden = !(frac > 0 && frac < 1);
   }
 
-  function renderChecklist(includeAccessibility) {
+  function renderChecklist(includeAccessibility, setupOnly = false) {
     const list = document.getElementById("installSteps");
     if (!list) return;
     list.innerHTML = "";
     for (const s of steps) {
       if (s.optionalToggle && !includeAccessibility) continue;
+      if (setupOnly && INSTALL_ONLY_STEPS.has(s.id)) continue;
       const li = document.createElement("li");
       li.dataset.step = s.id;
       li.dataset.state = "pending";
@@ -253,19 +254,22 @@
     }
   }
 
-  async function run() {
+  const INSTALL_ONLY_STEPS = new Set(["download", "push", "install", "cluster"]);
+
+  async function run(opts = {}) {
     if (running || global.DMDevice?.state?.mode !== "connected") return;
     running = true;
     const btn = document.getElementById("installBtn");
     if (btn) btn.disabled = true;
     setProgress(0, "");
-    renderChecklist(document.getElementById("optAccessibility")?.checked ?? false);
+    renderChecklist(document.getElementById("optAccessibility")?.checked ?? false, !!opts.setupOnly);
     const ctx = { localFile: null };
 
     log(t("install.start", "Install started"), "ok");
     let failed = false;
     for (const s of steps) {
       if (s.optionalToggle && !document.getElementById("optAccessibility")?.checked) continue;
+      if (opts.setupOnly && INSTALL_ONLY_STEPS.has(s.id)) continue;
       setStepState(s.id, "running");
       try {
         await s.run(ctx);
@@ -328,5 +332,5 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 
-  global.DMInstaller = { run, fetchLatest, steps };
+  global.DMInstaller = { run, runSetup: () => run({ setupOnly: true }), fetchLatest, steps };
 })(typeof window !== "undefined" ? window : globalThis);

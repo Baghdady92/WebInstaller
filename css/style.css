@@ -226,6 +226,38 @@ main { display: grid; gap: 1rem; max-inline-size: 46rem; margin-inline: auto; }
 .trouble ul { margin: .5rem 0 0; padding-inline-start: 1.2rem; display: grid; gap: .4rem; }
 .trouble code { font-family: var(--mono); color: var(--accent); }
 
+/* ── Tools ───────────────────────────────────────────────── */
+.tool-grid { display: flex; flex-wrap: wrap; gap: .6rem; }
+.tool-grid button {
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  border-radius: .55rem;
+  color: var(--ink);
+  padding: .55rem .9rem;
+  font: inherit;
+  font-size: .85rem;
+  cursor: pointer;
+}
+.tool-grid button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.tool-grid button:disabled { opacity: .45; cursor: not-allowed; }
+.tool-grid button.danger:hover:not(:disabled) { border-color: var(--danger); color: var(--danger); }
+
+.tool-result { font-size: .82rem; margin: .5rem 0 0; min-height: 1em; color: var(--muted); }
+.tool-result.ok { color: var(--accent); }
+.tool-result.warn { color: var(--warn); }
+.tool-result.err { color: var(--danger); }
+
+#diagOut {
+  margin: .7rem 0 0;
+  padding: .7rem .9rem;
+  background: #0a0f14;
+  border: 1px solid var(--card-line);
+  border-radius: .6rem;
+  font: .75rem/1.5 var(--mono);
+  color: var(--muted);
+  white-space: pre-wrap;
+}
+
 /* ── Log ─────────────────────────────────────────────────── */
 .log-head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
 .log-actions button {
