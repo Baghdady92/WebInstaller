@@ -52,15 +52,39 @@
   }
 
   // ── GitHub release ───────────────────────────────────────────────────
+  // Unauthenticated GitHub API allows 60 req/hour per IP — cache the release
+  // info (30 min TTL) and fall back to the cached copy when rate-limited.
+  const LATEST_CACHE = "dm-latest-release";
+  const LATEST_TTL = 30 * 60 * 1000;
+
+  function readCachedLatest() {
+    try { return JSON.parse(localStorage.getItem(LATEST_CACHE) ?? "null"); } catch { return null; }
+  }
+
   async function fetchLatest() {
-    const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, {
-      headers: { Accept: "application/vnd.github+json" },
-    });
-    if (!res.ok) throw new Error(`GitHub API ${res.status}`);
-    const rel = await res.json();
-    const asset = (rel.assets ?? []).find((a) => /^DisplayMirror-v.*\.apk$/.test(a.name));
-    if (!asset) throw new Error(t("install.noAsset", "No APK asset in latest release"));
-    return { version: rel.tag_name, url: asset.browser_download_url, size: asset.size, name: asset.name };
+    const cached = readCachedLatest();
+    if (cached && Date.now() - cached.ts < LATEST_TTL) return cached.rel;
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, {
+        headers: { Accept: "application/vnd.github+json" },
+      });
+      if (!res.ok) {
+        if (res.status === 403) throw new Error(t("install.rateLimited", "GitHub rate limit (resets within the hour) — waiting or use a local APK"));
+        throw new Error(`GitHub API ${res.status}`);
+      }
+      const rel = await res.json();
+      const asset = (rel.assets ?? []).find((a) => /^DisplayMirror-v.*\.apk$/.test(a.name));
+      if (!asset) throw new Error(t("install.noAsset", "No APK asset in latest release"));
+      const latest = { version: rel.tag_name, url: asset.browser_download_url, size: asset.size, name: asset.name };
+      try { localStorage.setItem(LATEST_CACHE, JSON.stringify({ ts: Date.now(), rel: latest })); } catch { /* storage full/blocked */ }
+      return latest;
+    } catch (e) {
+      if (cached) {
+        log(`${t("install.usingCache", "GitHub unavailable — using cached release info")}: ${cached.rel.version}`, "err");
+        return cached.rel;
+      }
+      throw e;
+    }
   }
 
   async function downloadApk(rel, onProgress) {
