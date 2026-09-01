@@ -1,5 +1,10 @@
 # WebInstaller — DisplayMirror one-click web installer
 
+> **Status (2026-09-01):** Phases 0–6 complete and deployed to
+> <https://baghdady92.github.io/WebInstaller/>. All logic is mock-tested in a
+> real browser; the remaining open items are the on-car verifications marked
+> ⚠ in §8 (unlock-code vectors, `run-as` availability, `pm install` output).
+
 **Goal:** a public website (like <https://unlokit.net/>) that lets a Jetour G700 owner
 install **DisplayMirror** onto the head unit **directly from Chrome** — no PC tools, no
 ADB CLI, no `install.sh`. Everything runs client-side in the browser over
