@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DisplayMirror Installer</title>
+  <meta name="description" content="Install DisplayMirror on your Jetour G700 head unit — right from Chrome. No PC, no commands.">
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="vendor/dm-engine.bundle.js"></script>
+  <script defer src="js/log.js"></script>
+  <script defer src="js/i18n.js"></script>
+  <script defer src="js/codegen.js"></script>
+  <script defer src="js/status.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">DM</span>
+      <div>
+        <h1>DisplayMirror Installer</h1>
+        <p class="tagline" data-i18n="tagline">Install DisplayMirror on your Jetour G700 — right from Chrome. No PC, no commands.</p>
+      </div>
+    </div>
+    <nav class="langs" aria-label="Language">
+      <button id="langEn" type="button">EN</button>
+      <button id="langAr" type="button" dir="rtl">عربي</button>
+    </nav>
+  </header>
+
+  <!-- Live readiness checks -->
+  <section class="checks" aria-label="Checks">
+    <span class="pill" id="checkEngine"><i class="dot"></i><span data-i18n="check.engine">ADB engine</span></span>
+    <span class="pill" id="checkSecure"><i class="dot"></i><span data-i18n="check.secure">Secure page (HTTPS)</span></span>
+    <span class="pill" id="checkUsb"><i class="dot"></i><span data-i18n="check.usb">WebUSB</span></span>
+    <span class="pill" id="checkBrowser"><i class="dot"></i><span data-i18n="check.browser">Browser</span></span>
+  </section>
+  <p class="gate hidden" id="gateMsg"></p>
+
+  <main>
+    <section class="card" id="step1">
+      <h2 data-i18n="step1.title">1 · Enable ADB on the car (once)</h2>
+      <p class="soon" data-i18n="phase4">Firmware picker, live unlock code and step-by-step guide — coming in the next build.</p>
+    </section>
+
+    <section class="card" id="step2">
+      <h2 data-i18n="step2.title">2 · Connect the head unit</h2>
+      <p class="soon" data-i18n="phase1">USB connect button and device panel — coming in the next build.</p>
+    </section>
+
+    <section class="card" id="step3">
+      <h2 data-i18n="step3.title">3 · Install DisplayMirror</h2>
+      <p class="soon" data-i18n="phase2">One-click install with automatic permissions and setup — coming in the next build.</p>
+    </section>
+
+    <section class="card" id="tools">
+      <h2 data-i18n="tools.title">Tools</h2>
+      <p class="soon" data-i18n="phase5">Update check, kill switches, uninstall, diagnostics — coming later.</p>
+    </section>
+
+    <section class="card log-card">
+      <div class="log-head">
+        <h2 data-i18n="log.title">Activity log</h2>
+        <div class="log-actions">
+          <button type="button" id="logCopy" data-i18n="log.copy">Copy</button>
+          <button type="button" id="logClear" data-i18n="log.clear">Clear</button>
+        </div>
+      </div>
+      <pre id="log" aria-live="polite"></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p data-i18n="footer.credits">DisplayMirror is open source. Install-flow inspiration: unlokit.net. Everything on this page runs in your browser — nothing is uploaded.</p>
+    <p class="warn" data-i18n="footer.safety">Park safely and keep the vehicle stationary while installing. Do not use while driving.</p>
+  </footer>
+</body>
+</html>

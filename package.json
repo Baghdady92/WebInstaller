@@ -1,0 +1,17 @@
+{
+  "name": "displaymirror-webinstaller",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Static site that installs DisplayMirror on a Jetour G700 head unit from Chrome via WebUSB/WebADB. No runtime dependencies — everything is bundled into vendor/dm-engine.bundle.js at build time.",
+  "type": "module",
+  "scripts": {
+    "build:engine": "node scripts/build-engine.mjs",
+    "test": "node scripts/test-codegen.mjs",
+    "serve": "npx serve ."
+  },
+  "devDependencies": {
+    "@yume-chan/adb": "^2.6.3",
+    "@yume-chan/adb-daemon-webusb": "^2.3.2",
+    "esbuild": "^0.25.0"
+  }
+}

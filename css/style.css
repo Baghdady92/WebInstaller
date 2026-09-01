@@ -1,0 +1,149 @@
+/* DisplayMirror Installer — dark utility theme, RTL-aware (logical properties only) */
+
+:root {
+  --bg: #0c1116;
+  --card: #131b23;
+  --card-line: #223041;
+  --ink: #e8eef4;
+  --muted: #8ba0b5;
+  --accent: #2dd4a7;
+  --accent-dim: #1a8f70;
+  --danger: #f87171;
+  --warn: #fbbf24;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 1rem 3rem;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* ── Top bar ─────────────────────────────────────────────── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--card-line);
+}
+
+.brand { display: flex; align-items: center; gap: .8rem; }
+
+.logo {
+  display: grid;
+  place-items: center;
+  inline-size: 2.6rem;
+  block-size: 2.6rem;
+  border-radius: .6rem;
+  background: var(--accent-dim);
+  color: #04241c;
+  font: 700 1rem var(--mono);
+}
+
+.brand h1 { margin: 0; font-size: 1.15rem; }
+.tagline { margin: .15rem 0 0; color: var(--muted); font-size: .85rem; }
+
+.langs button {
+  background: transparent;
+  border: 1px solid var(--card-line);
+  border-radius: .5rem;
+  color: var(--ink);
+  padding: .4rem .8rem;
+  cursor: pointer;
+  font: inherit;
+}
+.langs button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+/* ── Status pills ────────────────────────────────────────── */
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding: 1rem 0;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-size: .8rem;
+  padding: .3rem .7rem;
+  border: 1px solid var(--card-line);
+  border-radius: 999px;
+  color: var(--muted);
+}
+
+.pill .dot { inline-size: .5rem; block-size: .5rem; border-radius: 50%; background: #555; }
+.pill.ok { color: var(--accent); border-color: var(--accent-dim); }
+.pill.ok .dot { background: var(--accent); }
+.pill.bad { color: var(--danger); border-color: var(--danger); }
+.pill.bad .dot { background: var(--danger); }
+.pill.warn { color: var(--warn); border-color: var(--warn); }
+.pill.warn .dot { background: var(--warn); }
+
+.gate {
+  border: 1px solid var(--danger);
+  border-radius: .7rem;
+  padding: .8rem 1rem;
+  color: var(--danger);
+  font-size: .9rem;
+}
+.hidden { display: none; }
+
+/* ── Cards ───────────────────────────────────────────────── */
+main { display: grid; gap: 1rem; max-inline-size: 46rem; margin-inline: auto; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  border-radius: .8rem;
+  padding: 1.1rem 1.2rem;
+}
+
+.card h2 { margin: 0 0 .6rem; font-size: 1.02rem; }
+
+.soon { color: var(--muted); font-size: .88rem; margin: 0; font-style: italic; }
+
+/* ── Log ─────────────────────────────────────────────────── */
+.log-head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
+.log-actions button {
+  background: transparent;
+  border: 1px solid var(--card-line);
+  border-radius: .5rem;
+  color: var(--muted);
+  padding: .25rem .7rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: .8rem;
+}
+.log-actions button:hover { color: var(--ink); }
+
+#log {
+  margin: .6rem 0 0;
+  padding: .7rem .9rem;
+  background: #0a0f14;
+  border: 1px solid var(--card-line);
+  border-radius: .6rem;
+  min-block-size: 4rem;
+  max-block-size: 14rem;
+  overflow: auto;
+  font: .78rem/1.5 var(--mono);
+  color: var(--muted);
+  white-space: pre-wrap;
+}
+
+footer {
+  max-inline-size: 46rem;
+  margin: 2rem auto 0;
+  color: var(--muted);
+  font-size: .78rem;
+  text-align: center;
+}
+footer .warn { color: var(--warn); }
