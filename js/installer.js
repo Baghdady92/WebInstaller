@@ -51,26 +51,13 @@
     return adb().subprocess.noneProtocol.spawnWaitText(args);
   }
 
-  // ── Mirror fallback ──────────────────────────────────────────────────
-  // filedn.eu has no CORS headers, so the APK can't be fetched in-page from
-  // here. When GitHub is rate-limited/unreachable we surface this as a plain
-  // download link; the user then installs via "Use a local APK".
-  // NOTE: pinned version — update when publishing a new release.
-  const MIRROR = {
-    url: "https://filedn.eu/lc46PET1PcpBm1wpl6lHxRQ/Jetour_G700/G700%20ONLY/DisplayMirror-v3.24.0.apk",
-    version: "v3.24.0",
-  };
-
-  function showMirrorLink() {
-    const el = document.getElementById("mirrorLink");
-    if (!el) return;
-    el.href = MIRROR.url;
-    el.hidden = false;
-  }
-
-  // ── GitHub release ───────────────────────────────────────────────────
-  // Unauthenticated GitHub API allows 60 req/hour per IP — cache the release
-  // info (30 min TTL) and fall back to the cached copy when rate-limited.
+  // ── APK sources ──────────────────────────────────────────────────────
+  // Downloads must be CORS-enabled. GitHub release assets are NOT (no
+  // Access-Control-Allow-Origin), and the GitHub API is rate-limited (60/h).
+  // So the primary source is this repo's own apks/ folder, served by
+  // raw.githubusercontent.com with CORS and no rate limit. Update apks/
+  // (APK + latest.json) whenever a DisplayMirror release is published.
+  const MANIFEST_BASE = "https://raw.githubusercontent.com/Baghdady92/WebInstaller/master/apks/";
   const LATEST_CACHE = "dm-latest-release";
   const LATEST_TTL = 30 * 60 * 1000;
 
@@ -82,27 +69,36 @@
     const cached = readCachedLatest();
     if (cached && Date.now() - cached.ts < LATEST_TTL) return cached.rel;
     try {
-      const res = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`, {
-        headers: { Accept: "application/vnd.github+json" },
-      });
-      if (!res.ok) {
-        if (res.status === 403) throw new Error(t("install.rateLimited", "GitHub rate limit (resets within the hour) — waiting or use a local APK"));
-        throw new Error(`GitHub API ${res.status}`);
-      }
-      const rel = await res.json();
-      const asset = (rel.assets ?? []).find((a) => /^DisplayMirror-v.*\.apk$/.test(a.name));
-      if (!asset) throw new Error(t("install.noAsset", "No APK asset in latest release"));
-      const latest = { version: rel.tag_name, url: asset.browser_download_url, size: asset.size, name: asset.name };
-      try { localStorage.setItem(LATEST_CACHE, JSON.stringify({ ts: Date.now(), rel: latest })); } catch { /* storage full/blocked */ }
-      return latest;
+      const res = await fetch(MANIFEST_BASE + "latest.json", { cache: "no-cache" });
+      if (!res.ok) throw new Error(`manifest ${res.status}`);
+      const m = await res.json();
+      if (!/^DisplayMirror-v.*\.apk$/.test(m.apk ?? "")) throw new Error(t("install.noAsset", "No APK asset in latest release"));
+      const rel = { version: m.version, url: MANIFEST_BASE + m.apk, size: m.size, name: m.apk, sha256: m.sha256 };
+      try { localStorage.setItem(LATEST_CACHE, JSON.stringify({ ts: Date.now(), rel })); } catch { /* storage full/blocked */ }
+      return rel;
     } catch (e) {
       if (cached) {
-        log(`${t("install.usingCache", "GitHub unavailable — using cached release info")}: ${cached.rel.version}`, "err");
+        log(`${t("install.usingCache", "Download source unavailable — using cached release info")}: ${cached.rel.version}`, "err");
         return cached.rel;
       }
       showMirrorLink();
       throw e;
     }
+  }
+
+  // Mirror fallback — filedn.eu has no CORS headers either, so this can only
+  // be offered as a manual download link (then install via local APK).
+  // NOTE: pinned version — update when publishing a new release.
+  const MIRROR = {
+    url: "https://filedn.eu/lc46PET1PcpBm1wpl6lHxRQ/Jetour_G700/G700%20ONLY/DisplayMirror-v3.24.0.apk",
+    version: "v3.24.0",
+  };
+
+  function showMirrorLink() {
+    const el = document.getElementById("mirrorLink");
+    if (!el) return;
+    el.href = MIRROR.url;
+    el.hidden = false;
   }
 
   async function downloadApk(rel, onProgress) {
@@ -135,13 +131,20 @@
       async run(ctx) {
         ctx.localFile = pendingLocalFile ?? null;
         pendingLocalFile = null;
+        updatePickedIndicator();
         if (ctx.localFile) { ctx.apk = new Uint8Array(await ctx.localFile.arrayBuffer()); return; }
         ctx.release = await fetchLatest();
         log(`${t("install.downloading", "Downloading")} ${ctx.release.name} (${(ctx.release.size / 1048576).toFixed(1)} MB)…`);
         ctx.apk = await downloadApk(ctx.release, (got, total) => {
-          setProgress(total ? got / total : 0, `${(got / 1048576).toFixed(1)} MB`);
+          setProgress(got / total, `${(got / 1048576).toFixed(1)} MB`);
         });
         setProgress(1, `${(ctx.apk.length / 1048576).toFixed(1)} MB`);
+        if (ctx.release.sha256) {
+          const h = [...new Uint8Array(await crypto.subtle.digest("SHA-256", ctx.apk))]
+            .map((b) => b.toString(16).padStart(2, "0")).join("");
+          if (h !== ctx.release.sha256) throw new Error(t("install.checksum", "APK checksum mismatch — download corrupted, try again"));
+          log("sha256 ✓", "ok");
+        }
       },
     },
     {
@@ -338,9 +341,17 @@
     if (btn && global.DMDevice?.state?.mode === "connected") btn.disabled = false;
   }
 
-  // Manual APK fallback (offline / GitHub outage): stash the picked file for
-  // the download step to use instead of fetching from GitHub.
+  // Manual APK (offline / source unreachable): the picked file is used by the
+  // next Install press — shown as an indicator with a clear button.
   let pendingLocalFile = null;
+
+  function updatePickedIndicator() {
+    const wrap = document.getElementById("pickedWrap");
+    const name = document.getElementById("pickedName");
+    if (!wrap || !name) return;
+    wrap.hidden = !pendingLocalFile;
+    if (pendingLocalFile) name.textContent = `${t("install.fileSelected", "Selected APK")}: ${pendingLocalFile.name} (${(pendingLocalFile.size / 1048576).toFixed(1)} MB)`;
+  }
 
   function init() {
     document.getElementById("installBtn")?.addEventListener("click", run);
@@ -348,13 +359,13 @@
       const f = e.target.files?.[0];
       if (!f) return;
       e.target.value = ""; // allow re-picking the same file later
-      if (global.DMDevice?.state?.mode !== "connected") {
-        log(t("install.fileNoDevice", "APK selected, but no device is connected — connect first, then pick the file again"), "err");
-        return;
-      }
       pendingLocalFile = f;
-      log(`${t("install.usingFile", "Using local APK")} ${f.name} (${(f.size / 1048576).toFixed(1)} MB)`);
-      document.getElementById("installBtn").click();
+      updatePickedIndicator();
+      log(`${t("install.usingFile", "APK selected")} — ${t("install.pressInstall", "press Install / Update to use it")}`, "ok");
+    });
+    document.getElementById("pickedClear")?.addEventListener("click", () => {
+      pendingLocalFile = null;
+      updatePickedIndicator();
     });
     // Enable/disable Install button with connection state.
     const upd = () => {

@@ -111,6 +111,10 @@
         <label class="filelink" data-i18n="install.useFile">Use a local APK<input type="file" id="apkFile" accept=".apk" hidden></label>
       </div>
       <p class="latest" id="latestInfo"></p>
+      <div class="picked" id="pickedWrap" hidden>
+        <span id="pickedName"></span>
+        <button type="button" id="pickedClear" data-i18n="install.clearFile">✕ use latest instead</button>
+      </div>
       <a class="mirror" id="mirrorLink" hidden data-i18n="install.mirror" download>GitHub unreachable — download the APK from the mirror, then use "Use a local APK"</a>
       <div class="dl" id="dlWrap" hidden>
         <progress id="dlBar" max="1" value="0"></progress>

@@ -156,6 +156,26 @@ main { display: grid; gap: 1rem; max-inline-size: 46rem; margin-inline: auto; }
 
 .latest { margin: .6rem 0 0; font-size: .8rem; color: var(--accent); min-height: 1em; }
 
+.picked {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  flex-wrap: wrap;
+  margin-top: .5rem;
+  font-size: .82rem;
+  color: var(--warn);
+}
+.picked button {
+  background: none;
+  border: 1px solid var(--card-line);
+  border-radius: .4rem;
+  color: var(--muted);
+  font: inherit;
+  font-size: .76rem;
+  padding: .15rem .5rem;
+  cursor: pointer;
+}
+
 .mirror {
   display: inline-block;
   margin-top: .5rem;

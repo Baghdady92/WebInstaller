@@ -60,3 +60,13 @@ The install pipeline in `js/installer.js` mirrors `DisplayMirror/install.sh`
 and the `setup:` target in `DisplayMirror/Makefile`. If either changes, update
 this site in the same commit (and vice versa). See [AGENTS.md](AGENTS.md) and
 [PLAN.md](PLAN.md) for architecture details.
+
+**APK distribution:** downloads use `apks/` in this repo (served by
+`raw.githubusercontent.com` — CORS-enabled, no rate limits), NOT GitHub
+release assets (no CORS) and not the GitHub API (rate-limited). When you
+publish a new DisplayMirror release:
+
+1. Copy the APK in as `apks/DisplayMirror-v<VERSION>.apk`
+2. Update `apks/latest.json` (version, versionCode, size, sha256, date)
+3. Update the pinned `MIRROR` URL in `js/installer.js`
+4. Remove APK files older than the current version
