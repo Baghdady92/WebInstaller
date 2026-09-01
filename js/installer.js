@@ -51,6 +51,23 @@
     return adb().subprocess.noneProtocol.spawnWaitText(args);
   }
 
+  // ── Mirror fallback ──────────────────────────────────────────────────
+  // filedn.eu has no CORS headers, so the APK can't be fetched in-page from
+  // here. When GitHub is rate-limited/unreachable we surface this as a plain
+  // download link; the user then installs via "Use a local APK".
+  // NOTE: pinned version — update when publishing a new release.
+  const MIRROR = {
+    url: "https://filedn.eu/lc46PET1PcpBm1wpl6lHxRQ/Jetour_G700/G700%20ONLY/DisplayMirror-v3.24.0.apk",
+    version: "v3.24.0",
+  };
+
+  function showMirrorLink() {
+    const el = document.getElementById("mirrorLink");
+    if (!el) return;
+    el.href = MIRROR.url;
+    el.hidden = false;
+  }
+
   // ── GitHub release ───────────────────────────────────────────────────
   // Unauthenticated GitHub API allows 60 req/hour per IP — cache the release
   // info (30 min TTL) and fall back to the cached copy when rate-limited.
@@ -83,6 +100,7 @@
         log(`${t("install.usingCache", "GitHub unavailable — using cached release info")}: ${cached.rel.version}`, "err");
         return cached.rel;
       }
+      showMirrorLink();
       throw e;
     }
   }
@@ -285,6 +303,7 @@
     running = true;
     const btn = document.getElementById("installBtn");
     if (btn) btn.disabled = true;
+    document.getElementById("mirrorLink")?.setAttribute("hidden", "");
     setProgress(0, "");
     renderChecklist(document.getElementById("optAccessibility")?.checked ?? false, !!opts.setupOnly);
     const ctx = { localFile: null };

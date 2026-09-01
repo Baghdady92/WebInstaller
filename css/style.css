@@ -156,6 +156,14 @@ main { display: grid; gap: 1rem; max-inline-size: 46rem; margin-inline: auto; }
 
 .latest { margin: .6rem 0 0; font-size: .8rem; color: var(--accent); min-height: 1em; }
 
+.mirror {
+  display: inline-block;
+  margin-top: .5rem;
+  font-size: .82rem;
+  color: var(--warn);
+  border-bottom: 1px dashed var(--warn);
+}
+
 .dl { display: flex; align-items: center; gap: .6rem; margin-top: .6rem; font: .78rem var(--mono); color: var(--muted); }
 .dl progress { flex: 1; accent-color: var(--accent); }
 
