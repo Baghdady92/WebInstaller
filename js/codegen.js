@@ -25,8 +25,9 @@
     return (((n % MOD) + MOD) % MOD).toString().padStart(6, "0");
   }
 
-  /** Car-local date/hour for a timezone (or browser-local when tz is falsy). */
-  function carParts(tz) {
+  /** Car-local date/hour for a timezone (or browser-local when tz is falsy).
+   *  `nowMs` overrides the clock (used for manual car-clock offsets). */
+  function carParts(tz, nowMs) {
     const opts = {
       year: "numeric", month: "2-digit", day: "2-digit",
       hour: "2-digit", minute: "2-digit", hourCycle: "h23",
@@ -34,7 +35,7 @@
     if (tz) opts.timeZone = tz;
     const p = Object.fromEntries(
       new Intl.DateTimeFormat("en-CA", opts)
-        .formatToParts(new Date(Date.now()))
+        .formatToParts(new Date(nowMs ?? Date.now()))
         .map((x) => [x.type, x.value]),
     );
     let hour = parseInt(p.hour, 10);

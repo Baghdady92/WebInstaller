@@ -181,6 +181,51 @@ main { display: grid; gap: 1rem; max-inline-size: 46rem; margin-inline: auto; }
 
 .opt { display: flex; align-items: center; gap: .5rem; margin-top: .9rem; font-size: .82rem; color: var(--muted); }
 
+/* ── Step 1 guide ────────────────────────────────────────── */
+.guide-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: .7rem; }
+.guide-grid label { display: flex; flex-direction: column; gap: .3rem; }
+.guide-grid select {
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  border-radius: .5rem;
+  color: var(--ink);
+  padding: .5rem .6rem;
+  font: inherit;
+}
+
+.code-wrap {
+  margin-top: 1.1rem;
+  padding: 1rem;
+  border: 1px dashed var(--accent-dim);
+  border-radius: .7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .3rem;
+  text-align: center;
+}
+.code-wrap .lab { font-size: .78rem; color: var(--muted); }
+.code {
+  font: 700 clamp(2rem, 8vw, 3.2rem)/1.1 var(--mono);
+  letter-spacing: .18em;
+  color: var(--accent);
+}
+.countdown { font-size: .75rem; color: var(--warn); font-family: var(--mono); }
+.clock { font-size: .72rem; color: var(--muted); font-family: var(--mono); }
+.fine { margin: .3rem 0 0; font-size: .76rem; color: var(--muted); }
+
+.dial-row { display: flex; align-items: center; gap: .8rem; margin-top: .9rem; flex-wrap: wrap; }
+.dial-row .lab { font-size: .78rem; color: var(--muted); }
+.dial { font: 600 1.1rem var(--mono); letter-spacing: .1em; }
+
+.guide-steps { margin: 1.1rem 0 0; padding-inline-start: 1.4rem; display: grid; gap: .45rem; font-size: .88rem; color: var(--ink); }
+.guide-steps b { color: var(--accent); }
+
+.trouble { margin-top: 1rem; font-size: .84rem; color: var(--muted); }
+.trouble summary { cursor: pointer; color: var(--ink); }
+.trouble ul { margin: .5rem 0 0; padding-inline-start: 1.2rem; display: grid; gap: .4rem; }
+.trouble code { font-family: var(--mono); color: var(--accent); }
+
 /* ── Log ─────────────────────────────────────────────────── */
 .log-head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
 .log-actions button {

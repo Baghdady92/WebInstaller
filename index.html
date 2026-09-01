@@ -10,6 +10,7 @@
   <script defer src="js/log.js"></script>
   <script defer src="js/i18n.js"></script>
   <script defer src="js/codegen.js"></script>
+  <script defer src="js/guide.js"></script>
   <script defer src="js/keys.js"></script>
   <script defer src="js/device.js"></script>
   <script defer src="js/installer.js"></script>
@@ -42,7 +43,47 @@
   <main>
     <section class="card" id="step1">
       <h2 data-i18n="step1.title">1 · Enable ADB on the car (once)</h2>
-      <p class="soon" data-i18n="phase4">Firmware picker, live unlock code and step-by-step guide — coming in the next build.</p>
+
+      <div class="guide-grid">
+        <label><span class="k" data-i18n="guide.fw">Software version</span>
+          <select id="fwVer"></select></label>
+        <label><span class="k" data-i18n="guide.region">Region</span>
+          <select id="region"></select></label>
+        <label><span class="k" data-i18n="guide.offset">Car clock</span>
+          <select id="clockOffset"></select></label>
+      </div>
+
+      <div class="code-wrap">
+        <span class="lab" data-i18n="guide.enterCode">Enter this code in the car's ADB menu</span>
+        <span class="code" id="engCode">——————</span>
+        <span class="countdown" id="codeCountdown"></span>
+        <span class="clock" id="carClock"></span>
+        <p class="fine" id="fwHint"></p>
+      </div>
+
+      <div class="dial-row">
+        <span class="lab" data-i18n="guide.dial">First, dial this in the car's Phone app</span>
+        <span class="dial" id="dialCode"></span>
+      </div>
+
+      <ol class="guide-steps">
+        <li data-i18n="guide.s1"><b>Bluetooth OFF</b> — turn Bluetooth off in the car, then open the built-in Phone app.</li>
+        <li data-i18n="guide.s2"><b>Dial the code above</b> — the hidden engineering menu opens.</li>
+        <li data-i18n="guide.s3"><b>Plug in the cable</b> — data cable into the upper driver-side USB-A port (USB-A↔USB-A from a computer, or an OTG adapter from a phone).</li>
+        <li data-i18n="guide.s4"><b>Enter the 6-digit code</b> — it's tied to the car's clock; adjust the Region / Car-clock rows above until the time shown matches the car's screen.</li>
+        <li data-i18n="guide.s5"><b>Turn ADB ON</b> — if the USB light blinks off, unplug and replug the cable.</li>
+        <li data-i18n="guide.s6"><b>Continue below</b> — press Connect in step 2 and approve the prompt on the car screen.</li>
+      </ol>
+
+      <details class="trouble">
+        <summary data-i18n="guide.trouble">Troubleshooting</summary>
+        <ul>
+          <li data-i18n="guide.t1"><b>Wrong code?</b> The code follows the CAR's clock. Compare the time shown above with the car's screen and use the Car-clock row to correct it.</li>
+          <li data-i18n="guide.t2"><b>Menu doesn't open?</b> Bluetooth must be OFF before dialing. Dial exactly, including the <code>*#…#*</code> wrappers.</li>
+          <li data-i18n="guide.t3"><b>No USB device found?</b> Use a <b>data</b> cable (not charge-only) and the upper driver-side USB-A port. Try another cable.</li>
+          <li data-i18n="guide.t4"><b>Connection drops?</b> Replug the cable after turning ADB on; cheap OTG adapters are a common culprit.</li>
+        </ul>
+      </details>
     </section>
 
     <section class="card" id="step2">
