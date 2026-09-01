@@ -347,6 +347,11 @@
     document.getElementById("apkFile")?.addEventListener("change", (e) => {
       const f = e.target.files?.[0];
       if (!f) return;
+      e.target.value = ""; // allow re-picking the same file later
+      if (global.DMDevice?.state?.mode !== "connected") {
+        log(t("install.fileNoDevice", "APK selected, but no device is connected — connect first, then pick the file again"), "err");
+        return;
+      }
       pendingLocalFile = f;
       log(`${t("install.usingFile", "Using local APK")} ${f.name} (${(f.size / 1048576).toFixed(1)} MB)`);
       document.getElementById("installBtn").click();
