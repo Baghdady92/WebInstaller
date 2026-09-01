@@ -111,6 +111,39 @@ main { display: grid; gap: 1rem; max-inline-size: 46rem; margin-inline: auto; }
 
 .soon { color: var(--muted); font-size: .88rem; margin: 0; font-style: italic; }
 
+.hint { color: var(--muted); font-size: .88rem; margin: 0 0 .9rem; }
+
+.primary {
+  background: var(--accent-dim);
+  color: #04241c;
+  border: none;
+  border-radius: .6rem;
+  padding: .7rem 1.4rem;
+  font: 600 .95rem inherit;
+  cursor: pointer;
+}
+.primary:disabled { opacity: .55; cursor: wait; }
+.primary:hover:not(:disabled) { background: var(--accent); }
+
+/* ── Device panel ────────────────────────────────────────── */
+.device-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: .7rem 1.2rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--card-line);
+}
+.device-grid > div { display: flex; flex-direction: column; gap: .2rem; font-size: .92rem; }
+.device-grid .wide { grid-column: 1 / -1; }
+.device-grid .k {
+  font: 600 .62rem var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.device-grid [data-field="dmVersion"].ok { color: var(--accent); }
+
 /* ── Log ─────────────────────────────────────────────────── */
 .log-head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
 .log-actions button {

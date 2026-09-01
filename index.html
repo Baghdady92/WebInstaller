@@ -10,6 +10,8 @@
   <script defer src="js/log.js"></script>
   <script defer src="js/i18n.js"></script>
   <script defer src="js/codegen.js"></script>
+  <script defer src="js/keys.js"></script>
+  <script defer src="js/device.js"></script>
   <script defer src="js/status.js"></script>
 </head>
 <body>
@@ -44,7 +46,18 @@
 
     <section class="card" id="step2">
       <h2 data-i18n="step2.title">2 · Connect the head unit</h2>
-      <p class="soon" data-i18n="phase1">USB connect button and device panel — coming in the next build.</p>
+      <p class="hint" data-i18n="step2.hint">Plug the USB cable into the upper driver-side USB-A port, then press Connect and pick the device. If a prompt appears on the car screen, allow it.</p>
+      <button type="button" id="connectBtn" class="primary" data-i18n="connectBtn">Connect the head unit</button>
+
+      <div id="devicePanel" data-dm-state="connected" hidden>
+        <div class="device-grid">
+          <div><span class="k" data-i18n="device.model">Model</span><span data-field="model">—</span></div>
+          <div><span class="k" data-i18n="device.android">Android</span><span data-field="android">—</span></div>
+          <div><span class="k" data-i18n="device.firmware">Firmware</span><span data-field="firmware">—</span></div>
+          <div><span class="k" data-i18n="device.serial">Serial</span><span data-field="serial" id="deviceSerial">—</span></div>
+          <div class="wide"><span class="k" data-i18n="device.app">App</span><span data-field="dmVersion">—</span></div>
+        </div>
+      </div>
     </section>
 
     <section class="card" id="step3">
