@@ -12,6 +12,7 @@
   <script defer src="js/codegen.js"></script>
   <script defer src="js/keys.js"></script>
   <script defer src="js/device.js"></script>
+  <script defer src="js/installer.js"></script>
   <script defer src="js/status.js"></script>
 </head>
 <body>
@@ -62,7 +63,18 @@
 
     <section class="card" id="step3">
       <h2 data-i18n="step3.title">3 · Install DisplayMirror</h2>
-      <p class="soon" data-i18n="phase2">One-click install with automatic permissions and setup — coming in the next build.</p>
+      <p class="hint" data-i18n="step3.hint">Downloads the latest release from GitHub, installs it, grants all permissions and enables auto-start — one click.</p>
+      <div class="install-bar">
+        <button type="button" id="installBtn" class="primary" data-i18n="install.btn" disabled>Install / Update</button>
+        <label class="filelink" data-i18n="install.useFile">Use a local APK<input type="file" id="apkFile" accept=".apk" hidden></label>
+      </div>
+      <p class="latest" id="latestInfo"></p>
+      <div class="dl" id="dlWrap" hidden>
+        <progress id="dlBar" max="1" value="0"></progress>
+        <span id="dlLabel"></span>
+      </div>
+      <ul class="steps-list" id="installSteps"></ul>
+      <label class="opt"><input type="checkbox" id="optAccessibility"> <span data-i18n="install.optAccessibility">Also enable the nav-bar back button (accessibility service)</span></label>
     </section>
 
     <section class="card" id="tools">

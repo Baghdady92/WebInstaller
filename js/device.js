@@ -67,6 +67,7 @@
     }
     const serialEl = document.getElementById("deviceSerial");
     if (serialEl) serialEl.textContent = state.serial ?? "—";
+    document.dispatchEvent(new CustomEvent(state.mode === "connected" ? "dm-connected" : "dm-disconnected"));
   }
 
   function reset(reason, cls) {

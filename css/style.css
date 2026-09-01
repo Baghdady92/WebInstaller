@@ -144,6 +144,43 @@ main { display: grid; gap: 1rem; max-inline-size: 46rem; margin-inline: auto; }
 }
 .device-grid [data-field="dmVersion"].ok { color: var(--accent); }
 
+/* ── Installer ───────────────────────────────────────────── */
+.install-bar { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.filelink {
+  font-size: .82rem;
+  color: var(--muted);
+  border-bottom: 1px dashed var(--muted);
+  cursor: pointer;
+}
+.filelink:hover { color: var(--ink); }
+
+.latest { margin: .6rem 0 0; font-size: .8rem; color: var(--accent); min-height: 1em; }
+
+.dl { display: flex; align-items: center; gap: .6rem; margin-top: .6rem; font: .78rem var(--mono); color: var(--muted); }
+.dl progress { flex: 1; accent-color: var(--accent); }
+
+.steps-list { list-style: none; margin: .9rem 0 0; padding: 0; display: grid; gap: .35rem; }
+.steps-list li {
+  display: flex; align-items: center; gap: .55rem;
+  font-size: .86rem; color: var(--muted);
+}
+.steps-list li::before {
+  content: "";
+  inline-size: .85rem; block-size: .85rem; flex: none;
+  border: 1px solid var(--card-line);
+  border-radius: 3px;
+}
+.steps-list li[data-state="running"] { color: var(--ink); }
+.steps-list li[data-state="running"]::before { border-color: var(--warn); background: color-mix(in srgb, var(--warn) 40%, transparent); }
+.steps-list li[data-state="ok"] { color: var(--accent); }
+.steps-list li[data-state="ok"]::before { border-color: var(--accent); background: var(--accent); }
+.steps-list li[data-state="warn"] { color: var(--warn); }
+.steps-list li[data-state="warn"]::before { border-color: var(--warn); background: color-mix(in srgb, var(--warn) 40%, transparent); }
+.steps-list li[data-state="fail"] { color: var(--danger); }
+.steps-list li[data-state="fail"]::before { border-color: var(--danger); background: var(--danger); }
+
+.opt { display: flex; align-items: center; gap: .5rem; margin-top: .9rem; font-size: .82rem; color: var(--muted); }
+
 /* ── Log ─────────────────────────────────────────────────── */
 .log-head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; }
 .log-actions button {
