@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build:engine": "node scripts/build-engine.mjs",
-    "test": "node scripts/test-codegen.mjs && node scripts/test-keys.mjs",
+    "test": "node scripts/test-codegen.mjs && node scripts/test-keys.mjs && node scripts/test-permfix.mjs",
     "serve": "npx serve ."
   },
   "devDependencies": {

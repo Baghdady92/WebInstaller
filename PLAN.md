@@ -63,7 +63,10 @@ Captured from unlokit.net on 2026-09-01 (working notes live in
   log, 4 languages (EN/AR/RU/ZH, RTL-aware), Telegram community links.
 
 **Our scope is deliberately narrower:** one app — DisplayMirror — done perfectly,
-with its full permission/autostart/key setup automated. (General app library /
+with its full permission/autostart/key setup automated. The one general-purpose
+tool we do carry is the **permission fixer** (§4a): sideloading anything onto
+this head unit leaves it with every permission denied and no UI to allow them,
+so the fixer works on any user-installed package. (General app library /
 console can be a v2; see §9.)
 
 **Originality note:** do **not** copy unlokit's HTML/CSS/copy/assets. We write
@@ -91,11 +94,14 @@ code + code math). Footer credits unlokit for pioneering the flow.
 5. **Step 3 — Install / Update card** — one button. Runs the full pipeline
    (§4) with a live checklist (each step: pending / running / ✓ / ⚠ tolerated /
    ✗ failed + retry). Ends with "DisplayMirror launched 🎉".
-6. **Tools card** — Update check, Re-run setup (permissions/autostart only),
+6. **Fix app permissions card** — app picker (all user-installed packages, or
+   "All user apps") + one button. Grants each app everything its manifest asks
+   for; per-app result rows and a totals line. See §4a.
+7. **Tools card** — Update check, Re-run setup (permissions/autostart only),
    Push ADB keys (standalone), Kill-switch toggles (`displaymirror_noboot`),
    Uninstall, Diagnostics dump (getprop set → copyable).
-7. **Activity log** — timestamped, copy/copy-errors/clear, persisted per session.
-8. **Footer** — credits (DisplayMirror repo, unlokit inspiration), licenses,
+8. **Activity log** — timestamped, copy/copy-errors/clear, persisted per session.
+9. **Footer** — credits (DisplayMirror repo, unlokit inspiration), licenses,
    "park safely / don't use while driving" note.
 
 Languages: **EN + AR (RTL)** at launch; RU/ZH as stretch (same `data-i18n`
@@ -183,6 +189,32 @@ Notes:
 - `install -r` cannot **downgrade** — if installed versionCode > release, offer
   "Uninstall first (loses app data)" path in Tools.
 - Update flow = same pipeline (steps 1–2 + 10–12); app data is preserved.
+
+---
+
+## 4a. Fix app permissions (any sideloaded app)
+
+`js/permfix.js`. Independent of the DisplayMirror pipeline: it derives what to
+grant from the app itself, so it never needs a per-app table.
+
+| # | Step | Command(s) |
+|---|------|-----------|
+| 1 | List targets | `pm list packages -3` → app picker (or "all user apps") |
+| 2 | Runtime-grantable set (once per connection, cached) | `pm list permissions -d` → Set of dangerous permissions; empty/failed ⇒ fall back to attempting every requested permission |
+| 3 | What the app declares | `dumpsys package PKG` → the `requested permissions:` block (suffixes like `: restricted=true` stripped; block ends at the first non-permission line) |
+| 4 | Grant | `pm grant PKG P` for each requested ∩ dangerous |
+| 5 | App-ops | `appops set PKG OP allow` — only for ops whose **trigger permission** the app declares: `SYSTEM_ALERT_WINDOW`, `REQUEST_INSTALL_PACKAGES`, `WRITE_SETTINGS`, `GET_USAGE_STATS` (⇐ `PACKAGE_USAGE_STATS`), `MANAGE_EXTERNAL_STORAGE`, `LEGACY_STORAGE` (⇐ `*_EXTERNAL_STORAGE`), `PROJECT_MEDIA` (⇐ `FOREGROUND_SERVICE_MEDIA_PROJECTION`/`CAPTURE_VIDEO_OUTPUT`), `USE_FULL_SCREEN_INTENT` — plus, for every app, `ACCESS_RESTRICTED_SETTINGS` (the Android 13+ "Restricted setting" block on sideloaded apps) and `RUN_IN_BACKGROUND` / `RUN_ANY_IN_BACKGROUND` |
+
+Notes:
+- Steps 4–5 are batched into compound `a && echo P+x || echo P-x` statements,
+  chunked to ≲800 chars per `exec:` so older adbd command-length limits are
+  never hit, and so every grant reports its own outcome (per-app counts of
+  granted / refused instead of a silent `2>/dev/null`).
+- **Never grants what an app didn't ask for** — that is the deliberate
+  difference from a blanket "allow every op on every app" script.
+- Everything is tolerant: a refused `pm grant` (signature/privileged
+  permission) or a missing app-op on old firmware is logged, not an error.
+- Parser vectors live in `scripts/test-permfix.mjs`.
 
 ---
 
@@ -277,6 +309,8 @@ MVP for real users = Phases 0–2 (guide text can be simpler markdown initially)
 
 General app library / batch installs, custom APK + .xapk/.apkm sideloading,
 free-form shell console (beyond diagnostics presets), Widevine/DRM checks,
+uninstalling other apps from the app picker (the permission fixer §4a only
+grants — removal stays a Tools-for-DisplayMirror action),
 multi-model support (G900/T2/…), PWA offline caching beyond the shell, any
 backend/analytics. The site stays a dumb, private, client-side installer.
 

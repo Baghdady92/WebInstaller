@@ -23,7 +23,13 @@ dedicated, first-party installer for DisplayMirror with its full setup automated
    vehicle permission, enables auto-start, provisions ADB keys (so force-stop
    and split-screen work with no PC) and launches the app. Live per-step
    checklist; a "use a local APK" fallback covers offline installs.
-4. **Tools** — update check, re-run setup, the autostart kill switch (same
+4. **Fix app permissions** — for *any* sideloaded app, not just DisplayMirror.
+   Reads what the app declares in its manifest and grants it: every runtime
+   permission plus the special app-ops the car's Settings can't reach (screen
+   overlay, install unknown apps, usage access, write settings, restricted
+   settings, background execution). One app, or every user-installed app at
+   once. Nothing is granted to an app that never asked for it.
+5. **Tools** — update check, re-run setup, the autostart kill switch (same
    file as `make kill-boot`), uninstall, and a copyable diagnostics report.
 
 ## Browser support
@@ -35,7 +41,7 @@ served over HTTPS (or localhost). Brave needs Shields lowered for WebUSB.
 
 ```bash
 npm install        # dev deps only: esbuild + @yume-chan/adb packages
-npm test           # unit tests: engineer-code math, key DER encoding round-trip
+npm test           # unit tests: engineer-code math, key DER round-trip, dumpsys perm parser
 npm run build:engine   # rebuild vendor/dm-engine.bundle.js (only when upgrading libs)
 npx serve .        # local server (localhost is a secure context — WebUSB works)
 ```

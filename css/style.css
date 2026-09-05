@@ -254,6 +254,43 @@ main { display: grid; gap: 1rem; max-inline-size: 46rem; margin-inline: auto; }
 .trouble ul { margin: .5rem 0 0; padding-inline-start: 1.2rem; display: grid; gap: .4rem; }
 .trouble code { font-family: var(--mono); color: var(--accent); }
 
+/* ── Fix app permissions ─────────────────────────────────── */
+.perm-bar { display: flex; align-items: flex-end; gap: .7rem; flex-wrap: wrap; }
+.perm-target { display: flex; flex-direction: column; gap: .3rem; flex: 1 1 16rem; min-inline-size: 0; }
+.perm-target .k {
+  font: 600 .62rem var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.perm-target select {
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  border-radius: .5rem;
+  color: var(--ink);
+  padding: .5rem .6rem;
+  font: inherit;
+  font-size: .85rem;
+  inline-size: 100%;
+}
+.perm-target select:disabled { opacity: .45; }
+
+.ghost {
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  border-radius: .55rem;
+  color: var(--ink);
+  padding: .55rem .9rem;
+  font: inherit;
+  font-size: .85rem;
+  cursor: pointer;
+}
+.ghost:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.ghost:disabled { opacity: .45; cursor: not-allowed; }
+
+.perm-list { max-block-size: 15rem; overflow: auto; font-family: var(--mono); }
+.perm-list li { font-size: .78rem; }
+
 /* ── Tools ───────────────────────────────────────────────── */
 .tool-grid { display: flex; flex-wrap: wrap; gap: .6rem; }
 .tool-grid button {

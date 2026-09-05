@@ -14,6 +14,7 @@
   <script defer src="js/keys.js"></script>
   <script defer src="js/device.js"></script>
   <script defer src="js/installer.js"></script>
+  <script defer src="js/permfix.js"></script>
   <script defer src="js/tools.js"></script>
   <script defer src="js/status.js"></script>
 </head>
@@ -122,6 +123,23 @@
       </div>
       <ul class="steps-list" id="installSteps"></ul>
       <label class="opt"><input type="checkbox" id="optAccessibility" checked> <span data-i18n="install.optAccessibility">Enable the nav-bar back button (accessibility service)</span></label>
+    </section>
+
+    <section class="card" id="permfix">
+      <h2 data-i18n="perm.title">Fix app permissions</h2>
+      <p class="hint" data-i18n="perm.hint">Sideloaded apps land on the car with every permission denied and no on-screen way to allow them. This grants an app everything its own manifest asks for — runtime permissions plus the special toggles (screen overlay, install unknown apps, usage access, write settings, restricted settings). Nothing is granted to an app that never asked for it.</p>
+      <div class="perm-bar">
+        <label class="perm-target">
+          <span class="k" data-i18n="perm.target">App</span>
+          <select id="permTarget" disabled>
+            <option value="__all__" data-i18n="perm.allApps">All user-installed apps</option>
+          </select>
+        </label>
+        <button type="button" id="permRefresh" class="ghost" data-i18n="perm.refresh" disabled>Refresh list</button>
+        <button type="button" id="permRun" class="primary" data-i18n="perm.btn" disabled>Fix permissions</button>
+      </div>
+      <p class="tool-result" id="permResult"></p>
+      <ul class="steps-list perm-list" id="permList"></ul>
     </section>
 
     <section class="card" id="tools">

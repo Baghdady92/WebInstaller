@@ -19,7 +19,17 @@ algorithm, phases, and the risk register.
   or test on the deployed GitHub Pages URL.
 - i18n: `js/i18n.js` dictionaries, `data-i18n` attributes; EN + AR (RTL) are
   first-class. Use CSS logical properties (`margin-inline-start`, not `left`).
-- Unit test: `node scripts/test-codegen.mjs` (engineer-code vectors).
+- Unit tests: `npm test` — engineer-code vectors, ADB-key DER round-trip, and
+  the `dumpsys package` permission parser (`scripts/test-permfix.mjs`).
+
+## The permission fixer
+
+`js/permfix.js` is the one part of the site that is **not** DisplayMirror-
+specific: it grants any user-installed app everything its own manifest asks for
+(runtime permissions + the app-ops the car's Settings can't reach). It derives
+the list from `dumpsys package` at runtime — never hardcode a per-app list, and
+never grant an op whose trigger permission the app doesn't declare. Full command
+table in [`PLAN.md`](PLAN.md) §4a.
 
 ## Critical sync points with other projects
 
